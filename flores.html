@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laços & Flores Conceito</title>
+    
+    <!-- Pre-load das imagens -->
+    <link rel="preload" as="image" href="https://i.postimg.cc/hthrLYGc/380136f5-49f7-4755-950d-870924394875-u1-ae1c885d-6d22-49e3-8ef1-d18e9aaf40f3.jpg">
+    <link rel="preload" as="image" href="https://i.postimg.cc/XvCkhyd0/6532eeb3-1e20-4cc3-875b-f99ec16ea1e7-u1-bacd77b8-2ee5-476d-b6b0-df671889e3a3.jpg">
+    <link rel="preload" as="image" href="https://images.unsplash.com/photo-1559564484-e48b3e040ff4?q=100&w=3840&auto=format&fit=crop"> <!-- Fundo de Rosas -->
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;600;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Configuração Customizada -->
+    <script>
+        tailwind.config = {
+            theme: {
+                screens: {
+                    'mobile': { 'max': '809.98px' },
+                    'md-tablet': { 'min': '810px', 'max': '1199px' },
+                    'desktop': '1200px',
+                },
+                extend: {
+                    fontFamily: { 
+                        sans: ['Figtree', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'] 
+                    },
+                    transitionDuration: { '1200': '1200ms' }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body { font-family: 'Figtree', sans-serif; }
+        
+        .reveal-up {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
+                        transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .reveal-up.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .nav-link { position: relative; display: inline-block; cursor: pointer; }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            right: 0;
+            width: 100%;
+            height: 1px;
+            background-color: currentColor;
+            transform: scaleX(0);
+            transform-origin: right;
+            transition: transform 0.4s ease;
+        }
+        .nav-link:hover::after {
+            transform: scaleX(1);
+            transform-origin: left;
+        }
+
+        .cta-btn {
+            position: relative;
+            overflow: hidden;
+            transition: color 0.3s ease, border-color 0.3s ease;
+            z-index: 1;
+            cursor: pointer;
+        }
+        .cta-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: white;
+            transform: translateY(101%);
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: -1;
+        }
+        .cta-btn:hover { color: black; }
+        .cta-btn:hover::before { transform: translateY(0); }
+        
+        .text-shadow-lg { text-shadow: 0 4px 20px rgba(0,0,0,0.9); }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* Efeito de Borda Brilhante (Glow Box) para os Buquês */
+        .glow-box {
+            box-shadow: 0 0 15px rgba(255, 183, 3, 0.15), inset 0 0 20px rgba(255, 183, 3, 0.05);
+            border: 1px solid rgba(255, 183, 3, 0.2);
+            transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .group:hover .glow-box {
+            box-shadow: 0 0 35px rgba(255, 183, 3, 0.6), inset 0 0 25px rgba(255, 183, 3, 0.2);
+            border: 1px solid rgba(255, 183, 3, 0.9);
+            transform: translateY(-8px) scale(1.02);
+        }
+    </style>
+</head>
+<body class="bg-black text-white selection:bg-[#ffb703] selection:text-black h-screen flex flex-col overflow-hidden">
+
+    <!-- TELA DE CARREGAMENTO -->
+    <div id="preloader" class="fixed inset-0 bg-black z-[100] flex flex-col items-center justify-center transition-opacity duration-1000">
+        <div class="w-12 h-12 border-4 border-white/20 border-t-[#ffb703] rounded-full animate-spin mb-6"></div>
+        <h2 class="font-serif italic text-2xl tracking-widest text-white/90 animate-pulse">Laços & Flores</h2>
+        <p class="text-[10px] tracking-[0.3em] uppercase text-white/50 mt-2">Carregando experiência...</p>
+    </div>
+
+    <!-- Botão de Navegação (Para a Direita) -->
+    <button onclick="nextPage()" class="fixed right-4 md-tablet:right-8 desktop:right-12 top-1/2 -translate-y-1/2 z-50 w-12 h-12 flex items-center justify-center rounded-full border border-white/30 bg-black/20 backdrop-blur-md text-white hover:bg-white hover:text-black transition-colors duration-300 shadow-lg group" aria-label="Próxima página">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 transform group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5l7 7-7 7" />
+        </svg>
+    </button>
+
+    <!-- FUNDOS PRINCIPAIS (Home) -->
+    <div id="bg-1" class="absolute inset-0 bg-cover bg-center transition-opacity duration-1200 ease-in-out opacity-65 z-0 pointer-events-none" style="background-image: url('https://i.postimg.cc/hthrLYGc/380136f5-49f7-4755-950d-870924394875-u1-ae1c885d-6d22-49e3-8ef1-d18e9aaf40f3.jpg');"></div>
+    <div id="bg-2" class="absolute inset-0 bg-cover bg-center transition-opacity duration-1200 ease-in-out opacity-0 z-0 pointer-events-none" style="background-image: url('https://i.postimg.cc/XvCkhyd0/6532eeb3-1e20-4cc3-875b-f99ec16ea1e7-u1-bacd77b8-2ee5-476d-b6b0-df671889e3a3.jpg');"></div>
+    <div class="absolute inset-0 bg-black/40 z-10 pointer-events-none"></div> <!-- Película escura -->
+
+    <!-- NOVO: FUNDO DE ROSAS PARA AS ABAS (Fica invisível na Home) -->
+    <div id="rose-bg" class="absolute inset-0 bg-cover bg-center transition-opacity duration-1000 opacity-0 z-10 pointer-events-none" style="background-image: url('https://images.unsplash.com/photo-1559564484-e48b3e040ff4?q=100&w=3840&auto=format&fit=crop');">
+        <div class="absolute inset-0 bg-black/85"></div> <!-- Escurece as rosas para focar no texto -->
+    </div>
+
+    <!-- Cabeçalho -->
+    <header class="relative z-30 w-full p-6 md-tablet:p-8 desktop:p-12 flex justify-between items-center">
+        <a onclick="navigate('home')" class="cursor-pointer font-bold text-lg desktop:text-xl tracking-[0.1em] uppercase hover:opacity-80 transition-opacity drop-shadow-md">
+            Laços & Flores
+        </a>
+        
+        <nav class="mobile:hidden absolute left-1/2 -translate-x-1/2 flex gap-12 drop-shadow-md">
+            <a onclick="navigate('buques')" class="nav-link text-sm uppercase tracking-widest font-semibold">Buquês</a>
+            <a onclick="navigate('flores')" class="nav-link text-sm uppercase tracking-widest font-semibold">Flores</a>
+            <a onclick="navigate('contato')" class="nav-link text-sm uppercase tracking-widest font-semibold">Contato</a>
+        </nav>
+
+        <div class="flex items-center gap-6 drop-shadow-md">
+            <div id="clock" class="text-xs desktop:text-sm tracking-widest font-light opacity-90">CE --:--</div>
+            
+            <button id="menu-btn" class="md-tablet:hidden desktop:hidden flex flex-col gap-[5px] p-2 relative z-50">
+                <span class="block w-6 h-[1px] bg-white transition-all duration-300 transform origin-center"></span>
+                <span class="block w-6 h-[1px] bg-white transition-all duration-300"></span>
+                <span class="block w-6 h-[1px] bg-white transition-all duration-300 transform origin-center"></span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Menu Mobile (Agora com o fundo de Rosas embutido nele também) -->
+    <div id="mobile-menu" class="fixed inset-0 bg-cover bg-center z-40 flex flex-col items-center justify-center gap-10 transition-transform duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] translate-x-full" style="background-image: url('https://images.unsplash.com/photo-1559564484-e48b3e040ff4?q=100&w=3840&auto=format&fit=crop');">
+        <div class="absolute inset-0 bg-black/90 z-0"></div> <!-- Película escura do menu -->
+        <a onclick="navigateMobile('buques')" class="relative z-10 text-3xl uppercase tracking-widest cursor-pointer font-light hover:text-[#ffb703] transition-colors">Buquês</a>
+        <a onclick="navigateMobile('flores')" class="relative z-10 text-3xl uppercase tracking-widest cursor-pointer font-light hover:text-[#ffb703] transition-colors">Flores</a>
+        <a onclick="navigateMobile('contato')" class="relative z-10 text-3xl uppercase tracking-widest cursor-pointer font-light hover:text-[#ffb703] transition-colors">Contato</a>
+    </div>
+
+    <!-- PÁGINA: HOME -->
+    <main id="page-home" class="page-content relative z-20 flex-1 flex flex-col justify-center items-center text-center px-6 md-tablet:px-16 desktop:px-24">
+        <div class="max-w-5xl flex flex-col items-center">
+            <div class="reveal-up w-full">
+                <h1 class="text-[13vw] md-tablet:text-[9vw] desktop:text-[8vw] font-bold tracking-tighter leading-[0.9] mb-6 text-shadow-lg">
+                    A ARTE DE <br />
+                    <span id="highlight-text" class="transition-colors duration-1200 text-[#ffb703]">EMOCIONAR</span>
+                </h1>
+            </div>
+            <div class="reveal-up" style="transition-delay: 150ms;">
+                <p class="mobile:max-w-xs md-tablet:max-w-md desktop:max-w-2xl text-white/90 text-sm md-tablet:text-base desktop:text-xl mb-12 leading-relaxed font-light drop-shadow-md">
+                    Design floral conceitual. Criando memórias inesquecíveis através de arranjos exclusivos e sofisticados diretamente de Fortaleza.
+                </p>
+            </div>
+            <div class="reveal-up" style="transition-delay: 300ms;">
+                <a onclick="navigate('buques')" class="inline-block cta-btn border-2 border-white/60 px-10 py-4 uppercase text-xs desktop:text-sm tracking-[0.2em] font-semibold bg-black/40 hover:border-white shadow-lg">
+                    Explorar Coleção
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <!-- PÁGINA: BUQUÊS (Com as bordas brilhantes) -->
+    <main id="page-buques" class="page-content hidden relative z-20 flex-1 flex flex-col justify-start items-center px-6 md-tablet:px-16 desktop:px-24 h-full overflow-y-auto no-scrollbar pt-24 pb-12">
+        <div class="w-full max-w-6xl flex flex-col items-center">
+            <div class="reveal-up text-center mb-12">
+                <h2 class="font-serif italic text-4xl md-tablet:text-5xl desktop:text-6xl font-light tracking-wide mb-4">Coleção <span class="text-[#ffb703] font-bold not-italic font-sans tracking-tighter">BUQUÊS</span></h2>
+                <p class="text-white/80 max-w-lg mx-auto font-light">Nossa seleção premium de flores frescas, montadas à mão em nosso ateliê.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md-tablet:grid-cols-3 desktop:grid-cols-3 gap-10 w-full mb-12">
+                <!-- Produto 1 (Com Glow Box) -->
+                <div class="reveal-up flex flex-col items-center group cursor-pointer" style="transition-delay: 100ms;">
+                    <div class="w-full aspect-[4/5] bg-cover bg-center mb-6 overflow-hidden rounded-md glow-box" style="background-image: url('https://i.postimg.cc/hthrLYGc/380136f5-49f7-4755-950d-870924394875-u1-ae1c885d-6d22-49e3-8ef1-d18e9aaf40f3.jpg');">
+                        <div class="w-full h-full bg-black/20 group-hover:bg-transparent transition-colors duration-500"></div>
+                    </div>
+                    <h3 class="font-serif text-2xl tracking-wide mb-2 group-hover:text-[#ffb703] transition-colors">Buquê Aurora</h3>
+                    <div class="w-8 h-[1px] bg-white/30 mb-3 group-hover:bg-[#ffb703] transition-colors"></div>
+                    <p class="font-serif italic text-xl text-white/90">R$ 289,00</p>
+                </div>
+
+                <!-- Produto 2 (Com Glow Box) -->
+                <div class="reveal-up flex flex-col items-center group cursor-pointer" style="transition-delay: 200ms;">
+                    <div class="w-full aspect-[4/5] bg-cover bg-center mb-6 overflow-hidden rounded-md glow-box" style="background-image: url('https://i.postimg.cc/XvCkhyd0/6532eeb3-1e20-4cc3-875b-f99ec16ea1e7-u1-bacd77b8-2ee5-476d-b6b0-df671889e3a3.jpg');">
+                        <div class="w-full h-full bg-black/20 group-hover:bg-transparent transition-colors duration-500"></div>
+                    </div>
+                    <h3 class="font-serif text-2xl tracking-wide mb-2 group-hover:text-[#ffb703] transition-colors">Arranjo Majestade</h3>
+                    <div class="w-8 h-[1px] bg-white/30 mb-3 group-hover:bg-[#ffb703] transition-colors"></div>
+                    <p class="font-serif italic text-xl text-white/90">R$ 450,00</p>
+                </div>
+
+                <!-- Produto 3 (Com Glow Box) -->
+                <div class="reveal-up flex flex-col items-center group cursor-pointer" style="transition-delay: 300ms;">
+                    <div class="w-full aspect-[4/5] bg-cover bg-center mb-6 overflow-hidden rounded-md bg-zinc-900/50 flex items-center justify-center glow-box backdrop-blur-sm">
+                        <span class="text-white/50 font-serif italic">Nova Coleção</span>
+                    </div>
+                    <h3 class="font-serif text-2xl tracking-wide mb-2 group-hover:text-[#ffb703] transition-colors">Clássico Romântico</h3>
+                    <div class="w-8 h-[1px] bg-white/30 mb-3 group-hover:bg-[#ffb703] transition-colors"></div>
+                    <p class="font-serif italic text-xl text-white/90">R$ 195,50</p>
+                </div>
+            </div>
+
+            <div class="reveal-up" style="transition-delay: 400ms;">
+                <a onclick="navigate('home')" class="cta-btn border border-white/60 px-8 py-3 uppercase text-xs tracking-widest inline-block bg-black/40">Voltar para Home</a>
+            </div>
+        </div>
+    </main>
+
+    <!-- PÁGINA: FLORES -->
+    <main id="page-flores" class="page-content hidden relative z-20 flex-1 flex flex-col justify-center items-center text-center px-6 md-tablet:px-16 desktop:px-24 h-full">
+        <div class="max-w-4xl reveal-up">
+            <h2 class="font-serif italic text-4xl md-tablet:text-5xl desktop:text-6xl font-light tracking-wide mb-4">Design de <span class="text-[#ff4d6d] font-bold not-italic font-sans tracking-tighter">FLORES</span></h2>
+            <p class="text-white/90 mb-8 max-w-lg mx-auto font-light">Arranjos e composições florais exclusivas para transformar seu ambiente.</p>
+            <a onclick="navigate('home')" class="cta-btn border border-white/60 px-8 py-3 uppercase text-xs tracking-widest inline-block bg-black/40">Voltar para Home</a>
+        </div>
+    </main>
+
+    <!-- PÁGINA: CONTATO -->
+    <main id="page-contato" class="page-content hidden relative z-20 flex-1 flex flex-col justify-start items-center px-6 md-tablet:px-16 desktop:px-24 h-full overflow-y-auto no-scrollbar pt-24 pb-12">
+        <div class="w-full max-w-6xl flex flex-col items-center">
+            <div class="reveal-up text-center mb-12">
+                <h2 class="font-serif italic text-4xl md-tablet:text-5xl desktop:text-6xl font-light tracking-wide mb-4">Fale <span class="text-[#ffb703] font-bold not-italic font-sans tracking-tighter">CONOSCO</span></h2>
+                <p class="text-white/80 max-w-lg mx-auto font-light">Visite nosso ateliê em Fortaleza ou faça sua encomenda online.</p>
+            </div>
+
+            <div class="grid grid-cols-1 desktop:grid-cols-2 gap-0 w-full mb-12 bg-black/40 border border-white/20 shadow-2xl backdrop-blur-md glow-box">
+                <div class="reveal-up flex flex-col justify-center p-8 md-tablet:p-12 desktop:p-16 space-y-8" style="transition-delay: 100ms;">
+                    <div>
+                        <h3 class="font-serif text-2xl tracking-wide mb-2 text-[#ffb703]">Localização</h3>
+                        <p class="font-light text-white/90 leading-relaxed">
+                            Fortaleza - CE<br>
+                            <span class="text-sm opacity-60">(Confira o ponto exato no mapa)</span>
+                        </p>
+                    </div>
+                    <div>
+                        <h3 class="font-serif text-2xl tracking-wide mb-2 text-[#ff4d6d]">Horário de Atendimento</h3>
+                        <p class="font-light text-white/90 leading-relaxed">
+                            Segunda a Sexta: 08h às 18h<br>
+                            Sábado: 08h às 12h
+                        </p>
+                    </div>
+                    <div>
+                        <h3 class="font-serif text-2xl tracking-wide mb-2 text-[#ffb703]">Fale Direto</h3>
+                        <p class="font-light text-white/90 leading-relaxed">
+                            WhatsApp: (85) 9 9999-9999<br>
+                            Instagram: @lacosefloresconceito
+                        </p>
+                    </div>
+                </div>
+
+                <div class="reveal-up w-full h-[350px] md-tablet:h-[400px] desktop:h-full bg-zinc-900 border-t desktop:border-t-0 desktop:border-l border-white/20" style="transition-delay: 200ms;">
+                    <iframe 
+                        src="https://maps.google.com/maps?q=-3.773992,-38.5578978&hl=pt-BR&z=16&output=embed" 
+                        width="100%" 
+                        height="100%" 
+                        style="border:0; filter: invert(90%) hue-rotate(180deg) contrast(85%);" 
+                        allowfullscreen="" 
+                        loading="lazy" 
+                        referrerpolicy="no-referrer-when-downgrade">
+                    </iframe>
+                </div>
+            </div>
+
+            <div class="reveal-up" style="transition-delay: 300ms;">
+                <a onclick="navigate('home')" class="cta-btn border border-white/60 px-8 py-3 uppercase text-xs tracking-widest inline-block bg-black/40">Voltar para Home</a>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const pageOrder = ['home', 'buques', 'flores', 'contato'];
+        let currentPageIndex = 0;
+
+        // REMOVER TELA DE CARREGAMENTO
+        window.addEventListener('load', function() {
+            const preloader = document.getElementById('preloader');
+            setTimeout(() => {
+                preloader.style.opacity = '0';
+                setTimeout(() => {
+                    preloader.style.display = 'none';
+                    triggerAnimations(); 
+                }, 1000);
+            }, 500);
+        });
+
+        // Relógio
+        function updateClock() {
+            try {
+                const formatter = new Intl.DateTimeFormat('pt-BR', {
+                    timeZone: 'America/Fortaleza', hour: '2-digit', minute: '2-digit'
+                });
+                document.getElementById('clock').innerText = `CE ${formatter.format(new Date())}`;
+            } catch (e) {
+                const now = new Date();
+                const hh = String(now.getHours()).padStart(2, '0');
+                const mm = String(now.getMinutes()).padStart(2, '0');
+                document.getElementById('clock').innerText = `CE ${hh}:${mm}`;
+            }
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // Slider Crossfade
+        let isFirstImageActive = true;
+        const bg1 = document.getElementById('bg-1');
+        const bg2 = document.getElementById('bg-2');
+        const highlightText = document.getElementById('highlight-text');
+
+        setInterval(() => {
+            if (isFirstImageActive) {
+                bg1.classList.replace('opacity-65', 'opacity-0');
+                bg2.classList.replace('opacity-0', 'opacity-65');
+                if (highlightText) highlightText.classList.replace('text-[#ffb703]', 'text-[#ff4d6d]');
+            } else {
+                bg2.classList.replace('opacity-65', 'opacity-0');
+                bg1.classList.replace('opacity-0', 'opacity-65');
+                if (highlightText) highlightText.classList.replace('text-[#ff4d6d]', 'text-[#ffb703]');
+            }
+            isFirstImageActive = !isFirstImageActive;
+        }, 6000);
+
+        // Observer (Animações de entrada)
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add('is-visible');
+            });
+        }, { threshold: 0.1 });
+        
+        function resetAnimations() {
+            document.querySelectorAll('.reveal-up').forEach(el => {
+                el.classList.remove('is-visible');
+                observer.unobserve(el);
+            });
+        }
+
+        function triggerAnimations() {
+            setTimeout(() => {
+                document.querySelectorAll('.page-content:not(.hidden) .reveal-up').forEach(el => observer.observe(el));
+            }, 100);
+        }
+
+        // Menu Mobile Toggle
+        let isMenuOpen = false;
+        function toggleMenu() {
+            isMenuOpen = !isMenuOpen;
+            const menu = document.getElementById('mobile-menu');
+            const spans = document.getElementById('menu-btn').querySelectorAll('span');
+            
+            if (isMenuOpen) {
+                menu.classList.replace('translate-x-full', 'translate-x-0');
+                spans[0].classList.add('rotate-45', 'translate-y-[6px]');
+                spans[1].classList.add('opacity-0');
+                spans[2].classList.add('-rotate-45', '-translate-y-[6px]');
+            } else {
+                menu.classList.replace('translate-x-0', 'translate-x-full');
+                spans[0].classList.remove('rotate-45', 'translate-y-[6px]');
+                spans[1].classList.remove('opacity-0');
+                spans[2].classList.remove('-rotate-45', '-translate-y-[6px]');
+            }
+        }
+        document.getElementById('menu-btn').addEventListener('click', toggleMenu);
+
+        // Função principal de navegação
+        function navigate(pageId) {
+            currentPageIndex = pageOrder.indexOf(pageId);
+            resetAnimations();
+            
+            // Alterna o fundo de Rosas
+            const roseBg = document.getElementById('rose-bg');
+            if(pageId === 'home') {
+                roseBg.classList.replace('opacity-100', 'opacity-0');
+            } else {
+                roseBg.classList.replace('opacity-0', 'opacity-100');
+            }
+
+            document.querySelectorAll('.page-content').forEach(page => page.classList.add('hidden'));
+            document.getElementById(`page-${pageId}`).classList.remove('hidden');
+            triggerAnimations();
+        }
+
+        function nextPage() {
+            currentPageIndex = (currentPageIndex + 1) % pageOrder.length;
+            navigate(pageOrder[currentPageIndex]);
+        }
+
+        function navigateMobile(pageId) {
+            toggleMenu();
+            setTimeout(() => navigate(pageId), 300);
+        }
+    </script>
+</body>
+</html>
